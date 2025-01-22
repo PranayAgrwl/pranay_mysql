@@ -1,0 +1,36 @@
+1. CREATED DATABASE
+CREATE DATABASE db_project_journal;
+
+2. CREATED TRANSACTIONS TABLE
+CREATE TABLE ACCOUNTS_TRX (
+    TRX_ID VARCHAR(50) NOT NULL,      -- Transaction ID (Manually provided)
+    TRX_DATE DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,       -- Transaction date and time
+    FROM_AC VARCHAR(50) NOT NULL,     -- Account the transaction is from
+    TO_AC VARCHAR(50) NOT NULL,       -- Account the transaction is to
+    NOTES TEXT,                       -- Notes about the transaction
+    NOTES2 TEXT,                      -- Additional notes
+    AMOUNT DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (TRX_ID)              -- Setting TRX_ID as the primary key
+);
+
+3. CREATED ACCOUNTS LIST TABLE (MASTER)
+CREATE TABLE ACCOUNTS_AC_LIST (
+    AC_NO VARCHAR(50) NOT NULL,       -- Account number (manually provided)
+    AC_NAME VARCHAR(100) NOT NULL,    -- Name of the account
+    AC_TYPE INT NOT NULL,             -- Account type (foreign key to be linked later)
+    NOTES TEXT,                       -- Additional notes about the account
+    NOTES2 TEXT,                      -- Additional notes (optional)
+    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for account creation
+    PRIMARY KEY (AC_NO)               -- Setting AC_NO as the primary key
+);
+
+4. CREATED ACCOUNTS TYPE LIST
+CREATE TABLE ACCOUNTS_AC_TYPES (
+    AC_TYPE_NO INT NOT NULL,                      -- Account type number (manually provided)
+    AC_TYPE VARCHAR(100) NOT NULL,                -- Name of the account type (e.g., Food, Education)
+    NOTES TEXT,                                   -- Notes about the account type
+    NOTES2 TEXT,                                  -- Additional notes
+    CREATED_AT_TYPE TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Default timestamp when the type is created
+    PRIMARY KEY (AC_TYPE_NO)                      -- Setting AC_TYPE_NO as the primary key
+);
+
