@@ -1,0 +1,18 @@
+<?php
+// Database credentials
+$host = "sql309.infinityfree.com"; // XAMPP uses localhost by default
+$username = "if0_38135779";  // Default username for XAMPP
+$password = "N3FpmATwIAe0mja";      // Default password for XAMPP (empty string)
+$dbname = "if0_38135779_db_project_journal"; // Database name
+
+// Create connection
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Uncomment the line below to confirm the connection works (for testing purposes only)
+// echo "Connected successfully";
+?>

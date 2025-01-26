@@ -1,0 +1,57 @@
+1. CREATED DATABASE
+CREATE DATABASE db_project_journal;
+
+2. CREATED JOURNAL ENTRIES MASTER TABLE
+CREATE TABLE journal_master (
+    master_id INT NOT NULL,                         -- Primary Key, not auto-increment
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Auto-generated timestamp
+    label_id INT,                                      -- Label ID (assuming a foreign key or lookup for labels)
+    title TEXT,                                     -- Title of the journal entry
+    details TEXT,                                   -- Main details or description of the journal entry
+    notes TEXT,                                     -- Additional notes
+    notes2 TEXT,                                    -- Extra notes field
+    time_start DATETIME,                            -- Start date and time for the journal
+    time_end DATETIME,                              -- End date and time for the journal
+    people_id INT,                                     -- Comma-separated list of people involved
+    PRIMARY KEY (master_id)                         -- Primary key on master_id
+);
+
+3. CREATED JOURNAL LABELS LIST TABLE
+CREATE TABLE journal_labels (
+    label_id INT,                         -- Auto-incremented unique identifier for each label
+    label_name VARCHAR(255) NOT NULL,     -- Name of the label (e.g., category or tag)
+    label_notes TEXT,                     -- Additional notes related to the label
+    label_notes2 TEXT,                    -- Extra notes field for the label
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Auto-generated timestamp
+    PRIMARY KEY (label_id)                -- Primary key on label_id
+);
+
+4. CREATED JOURNAL PARTICIPANTS LIST TABLE
+CREATE TABLE journal_participants (
+
+);
+
+
+
+
+
+5. CREATED PEOPLE MASTER LIST TABLE
+CREATE TABLE people_master (
+    people_id INT AUTO_INCREMENT,         -- Auto-incremented unique identifier for each person
+    people_fname VARCHAR(255) NOT NULL,   -- First Name of the person
+    people_lname VARCHAR(255) NOT NULL,   -- Last Name of the person
+    group_id INT,                     -- Group ID associated with the person
+    people_notes TEXT,                    -- Additional notes related to the person
+    people_notes2 TEXT,                   -- Extra notes field for the person
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Auto-generated timestamp
+    PRIMARY KEY (people_id)               -- Primary key on people_id
+);
+
+6. CREATE TABLE people_group (
+    group_id INT,                        -- Auto-incremented unique identifier for each group
+    group_name VARCHAR(255) NOT NULL,    -- Name of the group
+    group_notes TEXT,                    -- Additional notes related to the group
+    group_notes2 TEXT,                   -- Extra notes field for the group
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Auto-generated timestamp
+    PRIMARY KEY (group_id)               -- Primary key on group_id
+);
