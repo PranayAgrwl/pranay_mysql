@@ -38,3 +38,23 @@ created page for deleting journal entry
 created page for editing journal entry
 5.4 journal_entry_upd.php
 created page for updating journal entry
+
+6. people_master.php
+created page for people master - complete people list
+6.1 people_master_del.php
+created page to execute delete people master query
+6.2 people_master_edit.php
+created page to edit people master form
+6.3 people_master_upd.php
+created page to execute people master update query
+
+
+7. people_group.php
+created page for people groups
+7.1 people_group_del.php
+created page to execute delete people group query
+7.2 people_group_edit.php
+created page to edit people group form
+7.3 people_group_upd.php
+created page to execute people group update query
+

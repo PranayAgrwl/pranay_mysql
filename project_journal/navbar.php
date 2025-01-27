@@ -25,12 +25,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="/pranay_mysql/project_journal/journal_labels.php">Labels List</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="/pranay_mysql/project_journal/ledger.php">Ledger</a>
-            </li> -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="/pranay_mysql/project_journal/accounts_list.php">Accounts List</a>
-            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" href="/pranay_mysql/project_journal/people_master.php">People Master</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/pranay_mysql/project_journal/people_group.php">People Groups</a>
+            </li>
             <!-- <li class="nav-item">
                 <a class="nav-link" href="/pranay_mysql/project_journal/accounts_types.php">Accounts Types</a>
             </li> -->

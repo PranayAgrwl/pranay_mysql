@@ -12,7 +12,7 @@ if (isset($_REQUEST['save_entry'])) {
     $notes2 = $_REQUEST['notes2_name'];
     $time_start = $_REQUEST['time_start_name'];
     $time_end = $_REQUEST['time_end_name'];
-    $people_id = $_REQUEST['people_name'];
+    $people_id = $_POST['participants_name'];
 
     // Get the next available SRNO
     $query_srno = "SELECT MAX(master_id) + 1 AS MAXSRNO FROM journal_master";
@@ -21,8 +21,26 @@ if (isset($_REQUEST['save_entry'])) {
     $msrno = $row_srno['MAXSRNO'] ?? 1;
 
     // Prepare the insert query
-    $query = "INSERT INTO journal_master (master_id, label_id, title, details, notes, notes2, time_start, time_end, people_id) 
-              VALUES ($msrno, '$label_id', '$title', '$details', '$notes', '$notes2', '$time_start', '$time_end', '$people_id')";
+    $query = "INSERT INTO journal_master (master_id, label_id, title, details, notes, notes2, time_start, time_end) 
+              VALUES ($msrno, '$label_id', '$title', '$details', '$notes', '$notes2', '$time_start', '$time_end')";
+
+    foreach ($people_id as $person_id) {
+        // Prepare the insert query for journal_participants
+        $query_participant = "INSERT INTO journal_participants (journal_id, participant_name) 
+                            VALUES ($msrno, '$person_id')";
+        
+        if ($stmt_participant = $conn->prepare($query_participant)) {
+            if ($stmt_participant->execute()) {
+                echo "Participant added successfully!<br>";
+            } else {
+                echo "Error adding participant: " . $stmt_participant->error . "<br>";
+            }
+            $stmt_participant->close();
+        } else {
+            echo "Failed to prepare participant insertion: " . $conn->error . "<br>";
+        }
+    }
+
     
     if ($stmt = $conn->prepare($query)) {
         // Execute the query
@@ -41,6 +59,19 @@ if (isset($_REQUEST['save_entry'])) {
 
 $query1 = "SELECT label_id, label_name FROM journal_labels ORDER BY label_name";
 $result1 = $conn->query($query1);
+
+$query2 = "
+SELECT 
+    CONCAT(p.people_nick, ' ', t.group_name) AS complete_name, p.people_id
+FROM 
+    people_master p
+INNER JOIN 
+    people_group t ON p.group_id = t.group_id
+ORDER BY p.people_name
+";
+$result2 = $conn->query($query2);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -101,8 +132,18 @@ $result1 = $conn->query($query1);
                 <input type="datetime-local" class="form-control" name="time_end_name">
             </div>
             <div class="mb-3">
-                <label class="form-label">People</label>
-                <input type="text" class="form-control" name="people_name">
+                <label>People:</label><br>
+                <div id="languagesContainer">
+                    <select name="participants_name[]" class="form-control">
+                        <option value=""></option>
+                        <?php while ($row2 = $result2->fetch_assoc()) { ?>
+                            <option value="<?php echo $row2['people_id']; ?>">
+                                <?php echo $row2['complete_name']; ?>
+                        </option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-outline-warning mt-2" id="addLanguageBtn">+</button>
             </div>
 
             <button type="submit" name="save_entry" class="btn btn-primary">Save</button>
@@ -110,6 +151,53 @@ $result1 = $conn->query($query1);
     </div>
 
     <br>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const languagesContainer = document.getElementById('languagesContainer');
+            const addLanguageBtn = document.getElementById('addLanguageBtn');
+            let languageCount = 1;
+
+            // PHP will generate this options string
+            const optionsHTML = `<?php
+                $result2->data_seek(0); // Reset the pointer to the first row
+                $options = '';
+                while ($row2 = $result2->fetch_assoc()) {
+                    $options .= '<option value=\"' . $row2['people_id'] . '\">' . $row2['complete_name'] . '</option>';
+                }
+                echo $options;
+            ?>`;
+
+            // Function to create a new dropdown with the same options
+            function createLanguageSelect() {
+                languageCount++;
+                const newLanguageSelect = document.createElement('div');
+                newLanguageSelect.classList.add('mb-3');
+                newLanguageSelect.innerHTML = `
+                    <select name="participants_name[]" class="form-control">
+                        <option value="">Select next person</option>
+                        ${optionsHTML}  <!-- Insert the PHP generated options -->
+                    </select>
+                `;
+                languagesContainer.appendChild(newLanguageSelect);
+            }
+
+            // Event listener for the "add language" button
+            addLanguageBtn.addEventListener('click', function () {
+                createLanguageSelect();
+            });
+        });
+
+
+    
+
+    
+    
+    </script>
+
+
 
 </body>
 
