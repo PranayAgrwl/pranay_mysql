@@ -23,6 +23,9 @@
                 <a class="nav-link" href="/pranay_mysql/project_journal/journal_entry.php">Create Entry</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="/pranay_mysql/project_journal/journal_entry_view.php">View Entry</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/pranay_mysql/project_journal/journal_labels.php">Labels List</a>
             </li>
             <li class="nav-item">
@@ -31,9 +34,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="/pranay_mysql/project_journal/people_group.php">People Groups</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="/pranay_mysql/project_journal/accounts_types.php">Accounts Types</a>
-            </li> -->
         </ul>
     </div>
     </nav>
