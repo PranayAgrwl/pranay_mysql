@@ -7,26 +7,35 @@ if (isset($_POST['people_id_name'])) {
     $master_id = $_POST['people_id_name'];
 
     // Fetch existing journal entry data
-    $query = "
-        SELECT jm.*, jl.label_name
+    $query = "SELECT 
+        jm.*, jl.label_name
         FROM journal_master jm
         LEFT JOIN journal_labels jl ON jm.label_id = jl.label_id
-        WHERE jm.master_id = ?
+        WHERE jm.master_id = $master_id
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $master_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $journal = $result->fetch_assoc();
 
     // Fetch existing participants for this journal entry
-    $participants_query = "
-        SELECT participant_id, participant_name
-        FROM journal_participants
-        WHERE journal_id = ?
+    $participants_query = "SELECT 
+        jm.*, 
+        jp.*, 
+        pm.*, 
+        pg.*, 
+        CONCAT(pm.people_name, ' - ', pg.group_name) AS people_complete
+    FROM 
+        journal_master jm
+    LEFT JOIN 
+        journal_participants jp ON jm.master_id = jp.journal_id
+    LEFT JOIN 
+        people_master pm ON jp.participant_name = pm.people_id
+    LEFT JOIN 
+        people_group pg ON pm.group_id = pg.group_id
+        WHERE journal_id = $master_id
     ";
     $stmt2 = $conn->prepare($participants_query);
-    $stmt2->bind_param('i', $master_id);
     $stmt2->execute();
     $participants_result = $stmt2->get_result();
 
@@ -53,8 +62,32 @@ if (isset($_POST['people_id_name'])) {
         <!-- Hidden field for master_id -->
         <input type="hidden" name="master_id" value="<?php echo $journal['master_id']; ?>">
 
+        <!-- Participants Table -->
+        <h4>Participants</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Participant Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="participants-list">
+                <?php
+                while ($participant = $participants_result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $participant['people_complete'] . "</td>";
+                    echo "<td><a href='journal_entry_delete_participant.php?participant_id=" . $participant['participant_id'] . "' class='btn btn-danger btn-sm'>Delete</a></td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+        
+        <button type="button" class="btn btn-success" id="addParticipantBtn">Add Participant</button>
+
+        <hr>
         <div class="mb-3">
-            <label for="label_id" class="form-label">Label</label>
+            <label for="label_id" class="form-label">Label Name</label>
             <select name="label_id" class="form-control" required>
                 <option value="<?php echo $journal['label_id']; ?>" selected>
                     <?php echo $journal['label_name']; ?>
@@ -99,32 +132,10 @@ if (isset($_POST['people_id_name'])) {
             <label for="time_end" class="form-label">End Time</label>
             <input type="datetime-local" name="time_end" class="form-control" value="<?php echo date('Y-m-d\TH:i', strtotime($journal['time_end'])); ?>" required>
         </div>
-
-        <!-- Participants Table -->
-        <h4>Participants</h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Participant Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="participants-list">
-                <?php
-                while ($participant = $participants_result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $participant['participant_name'] . "</td>";
-                    echo "<td><a href='journal_entry_delete_participant.php?participant_id=" . $participant['participant_id'] . "' class='btn btn-danger btn-sm'>Delete</a></td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
-        </table>
         
-        <button type="button" class="btn btn-success" id="addParticipantBtn">Add Participant</button>
-
-        <br><br>
+        <br>
         <button type="submit" class="btn btn-primary">Update Entry</button>
+        <hr>
     </form>
 </div>
 

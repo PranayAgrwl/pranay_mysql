@@ -1,2 +1,3 @@
 # Ignore the database connection file
 project_accounts/connection.php
+project_journal/connection.php
