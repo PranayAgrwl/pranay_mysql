@@ -65,7 +65,7 @@ $result2 = $conn->query($query2);
 
             <div class="mb-3">
                 <label>From Account:</label><br>
-                <select name="from_ac_name" class="form-control">
+                <select name="from_ac_name" class="form-control" autofocus>
                     <option value=""></option>
                     <?php while ($row1 = $result1->fetch_assoc()) { ?>
                         <option value="<?php echo $row1['AC_NO']; ?>">
